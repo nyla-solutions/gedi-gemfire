@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!-- SecurityClient.xml Configures a region as a client region in a Security 
+	cache. The region's loader and writer connect to a server listening on port 
+	40404. -->
+<!DOCTYPE client-cache PUBLIC
+  "-//GemStone Systems, Inc.//GemFire Declarative Caching 6.5//EN"
+  "http://www.gemstone.com/dtd/cache6_5.dtd">
+<client-cache>
+	<pool name="client" 
+		retry-attempts="45" 
+		subscription-enabled="true">
+		<locator port="10334" host="localhost" />
+		<!-- locator port="10680" host="localhost" / -->
+	</pool>
+
+<!-- 
+
+	<region name="exampleRegion" refid="PROXY">
+		<region-attributes refid="PROXY">
+		</region-attributes>
+	</region>
+	
+	<region name="users" refid="PROXY">
+		<region-attributes refid="PROXY">
+		</region-attributes>
+	</region>
+
+	<region name="__FUNCTION_CATALOG">
+		<region-attributes data-policy="replicate" pool-name="client">
+		</region-attributes>
+	</region>
+	<region name="orderRegion" refid="PROXY">
+		<region-attributes refid="PROXY">
+		</region-attributes>
+	</region>
+	
+ -->
+
+
+
+
+</client-cache>

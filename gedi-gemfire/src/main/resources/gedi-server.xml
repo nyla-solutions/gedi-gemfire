@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:gfe="http://www.springframework.org/schema/gemfire"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/gemfire  
+	http://www.springframework.org/schema/gemfire/spring-gemfire.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+       ">
+
+
+    <context:property-placeholder location="classpath:config.properties"/>
+    <context:component-scan base-package="solutions.gedi.gemfire">
+    </context:component-scan>
+    
+    <context:annotation-config/>
+    	
+		<util:properties id="gemfire-props">
+			<prop key="log-level">config</prop>
+			<prop key="locators">localhost[10334]</prop>
+			<prop key="name">server1</prop>
+			<prop key="mcast-port">0</prop>
+			<prop key="jmx-manager-start">true</prop>
+			<prop key="jmx-manager">true</prop>
+			<prop key="jmx-manager-port">5001</prop>
+		
+			<!-- prop key="distributed-system-id">0</prop>
+			<prop key="groups">default</prop-->
+		</util:properties>
+
+         <!--  pdx-disk-store="pdxDiskStore" -->
+		<gfe:cache properties-ref="gemfire-props"  copy-on-read="false"  pdx-serializer-ref="pdxSerializer">
+		
+		</gfe:cache>
+		
+		<bean id="pdxSerializer" class="com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer">
+			<property name="serializableClasses">
+				<array>
+					<value>solutions.gedi.demo.data.*</value>
+				</array>
+			</property>
+		</bean>
+
+		<!-- Note the SpEL expression here used to dynamically configure an available 
+		
+		gfe:cache-server port="#{portGenerator.generatePort(40404,40406)}" />
+		
+			port in the given range -->
+			
+		
+		<gfe:cache-server port="40440">
+		</gfe:cache-server>
+		
+
+		<!-- bean id="portGenerator"
+			class="org.springframework.data.gemfire.examples.util.ServerPortGenerator" /-->
+
+
+	 <gfe:transaction-manager id="gemfireTransactionManager" cache-ref="gemfireCache"  copy-on-read="true"/>
+	  <tx:annotation-driven/>
+
+		<gfe:replicated-region id="testReplicated"></gfe:replicated-region>
+		
+		
+		<gfe:partitioned-region id="orderRegion">
+		</gfe:partitioned-region>
+		
+		<gfe:partitioned-region id="dealsBackup">
+		</gfe:partitioned-region>
+		
+		
+	 <gfe:replicated-region id="deals" cache-ref="gemfireCache" disk-store-ref="overflowDiskStore">
+		<gfe:eviction type="HEAP_PERCENTAGE" action="OVERFLOW_TO_DISK" />
+	</gfe:replicated-region>
+		
+		<gfe:function-service id="ImportJsonFunction">		
+			<gfe:function>
+				<ref bean="importJsonFunction"/>
+			</gfe:function>
+		</gfe:function-service>
+		<gfe:function-service id="ExportJsonFunction">		
+			<gfe:function>
+				<ref bean="exportJsonFunction"/>
+			</gfe:function>
+		</gfe:function-service>
+		
+		<!--  gfe:function-service id="GetOnlineDeals">		
+			<gfe:function ref="getOnlineDeals"/>
+		</gfe:function-service-->
+		<!-- gfe:function-service id="DemoTransactionFunction">		
+			<gfe:function ref="demoTransactionFunction"/>
+		</gfe:function-service-->
+	
+    <bean id="dealTemplate" class="org.springframework.data.gemfire.GemfireTemplate">
+    	<constructor-arg ref="deals"></constructor-arg>
+    </bean>
+
+	<!-- Disk store for PDX metadata -->
+    <gfe:disk-store id="overflowDiskStore" cache-ref="gemfireCache" auto-compact="true" max-oplog-size="521">
+        <gfe:disk-dir location="runtime/gemfire" />
+    </gfe:disk-store>
+        
+</beans>

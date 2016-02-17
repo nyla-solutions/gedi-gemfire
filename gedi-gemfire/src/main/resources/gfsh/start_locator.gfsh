@@ -1,0 +1,1 @@
+start locator --name=local --port=10334  --J=-Dgemfire.enable-network-partition-detection=true

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"	
+	xmlns:gfe="http://www.springframework.org/schema/gemfire"
+	xsi:schemaLocation="http://www.springframework.org/schema/gemfire http://www.springframework.org/schema/gemfire/spring-gemfire.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+				http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <!-- context:property-placeholder location="classpath:config.properties"/-->
+    <!--  context:component-scan base-package="solutions.gedi.gemfire" /-->
+    
+    <util:properties id="gemfire-props">
+        <prop key="log-level">fine</prop>
+        <prop key="groups">default</prop>
+    </util:properties>
+    
+    <gfe:client-cache properties-ref="gemfire-props" pool-name="default" pdx-serializer-ref="pdxSerializer"/>
+    
+    <bean id="pdxSerializer" class="com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer">
+			<property name="serializableClasses">
+				<array>
+					<value>solutions.gedi.demo.data.*</value>
+				</array>
+			</property>
+		</bean>
+		
+    <gfe:client-region id="orderRegion" />
+    
+    
+     <gfe:client-region id="deals" />
+     
+    <gfe:pool id="default" >
+    	<gfe:locator host="localhost" port="10334"/>
+    </gfe:pool>
+    	  
+    <!-- bean id="dealTemplate" class="org.springframework.data.gemfire.GemfireTemplate">
+    	<constructor-arg ref="deals"></constructor-arg>
+    </bean-->
+ 
+</beans>
