@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm    
+http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+    version="1.0">
+    <description>GemFire Integration</description>
+    <package>io.pivotal.gemfire.integration.emp.data</package> 
+    <entity class="io.pivotal.gemfire.integration.emp.data.Employee" name="Employee">        
+        <table name="Employee"/>
+        <attributes>
+            <id name="employeeId">
+            </id>
+            <basic name="firstName">
+                <column name="firstName" length="15"/>
+            </basic>
+            <basic name="lastName">
+                <column name="lastName" length="15"/>
+            </basic>
+            <transient name="hireDate"/>
+        </attributes>
+   </entity>
+</entity-mappings>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:jdbc="http://www.springframework.org/schema/integration/jdbc"
+	xmlns:gfe="http://www.springframework.org/schema/gemfire"
+	xmlns:int-gfe="http://www.springframework.org/schema/integration/gemfire"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+    http://www.springframework.org/schema/integration
+    http://www.springframework.org/schema/integration/spring-integration.xsd 
+    http://www.springframework.org/schema/integration/jdbc
+    http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd
+    http://www.springframework.org/schema/integration/gemfire
+    http://www.springframework.org/schema/integration/gemfire/spring-integration-gemfire.xsd
+    http://www.springframework.org/schema/integration/http
+    http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+    http://www.springframework.org/schema/gemfire
+    http://www.springframework.org/schema/gemfire/spring-gemfire.xsd
+    http://www.springframework.org/schema/batch
+    http://www.springframework.org/schema/batch/spring-batch.xsd
+    http://www.springframework.org/schema/task
+    http://www.springframework.org/schema/task/spring-task.xsd">
+
+
+	<!-- ============================================ -->
+	<!-- General Spring Configuration -->
+	<context:component-scan base-package="io.pivotal.gemfire.integration.emp"></context:component-scan>
+	<context:annotation-config />
+	<tx:annotation-driven />
+	<task:executor id="executor" pool-size="10"/>
+	<!-- ============================================ -->
+	<!-- JPA/JDBC configuration -->
+	<context:property-placeholder location="classpath:META-INF/jdbc.properties" />
+	<jpa:repositories base-package="io.pivotal.gemfire.integration.emp.repositories" />
+
+	<bean id="entityManagerFactory" scope="prototype"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="io.pivotal.gemfire.integration.emp" />
+		<property name="mappingResources">
+			<array>
+				<value>META-INF/orm.xml</value>
+			</array>
+		</property>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.cache.use_query_cache">false</prop>
+				<prop key="hibernate.cache.use_second_level_cache">false</prop>
+				<prop key="hibernate.cache.query_cache_factory"></prop>
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	<bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource"
+		destroy-method="close">
+		<property name="URL" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="connectionCachingEnabled" value="true" />
+	</bean>
+	<bean id="hibernateJpaAdapter"
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+		<property name="showSql" value="true" />
+	</bean>
+	<!-- =================================== -->
+	<!--  Spring Data GemFire  -->
+	<bean id="employeeListener" class="io.pivotal.gemfire.integration.spring.cmd.ToRdbmsCacheListener">
+		<property name="crudRepository" ref="employeeRepository"></property>
+		<property name="inflightMap" ref="employer_inflight"></property>
+	</bean>
+	<gfe:client-cache id="client-cache" pool-name="client-pool"></gfe:client-cache>
+	<gfe:client-region id="employer_inflight" cache-ref="client-cache"
+		pool-name="client-pool" />
+		
+	<gfe:client-region id="employer" cache-ref="client-cache"
+		pool-name="client-pool" />
+	<gfe:client-region id="employees" cache-ref="client-cache"
+		pool-name="client-pool" shortcut="CACHING_PROXY" >
+	
+		<gfe:cache-listener ref="employeeListener"/>
+		<gfe:key-interest result-policy="KEYS">
+	        <bean id="key" class="java.lang.String">
+	             <constructor-arg value="ALL_KEYS" />
+	        </bean>
+    	</gfe:key-interest>
+ 	 	<gfe:regex-interest pattern=".*" receive-values="true" result-policy="KEYS_VALUES"/>
+	</gfe:client-region>	
+	<gfe:pool id="client-pool" subscription-enabled="true">
+		<gfe:locator host="localhost" port="10001" />
+	</gfe:pool>
+	<bean id="employerGemFireTemplate" class="org.springframework.data.gemfire.GemfireTemplate">
+		<constructor-arg ref="employees" type="com.gemstone.gemfire.cache.Region"></constructor-arg>
+	</bean>
+	<!-- =================================== -->
+	<!--   Spring Batch Configuration -->
+	<bean id="jobLauncher"
+         class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+         	<property name="jobRepository" ref="jobRepository"></property>
+         	  <property name="taskExecutor">
+        		<bean class="org.springframework.core.task.SimpleAsyncTaskExecutor">
+    
+        		</bean>
+    		</property>
+        </bean>
+   	<batch:job-repository id="jobRepository"/>
+   	
+	<batch:job id="initialEmployeeLoadJob">
+	    <batch:step id="employeeload">
+	    	  <batch:tasklet>
+                <batch:chunk reader="itemReader"  processor="itemProcessor" writer="itemWriter" commit-interval="2"/>
+            </batch:tasklet>
+	    </batch:step>
+	</batch:job>
+
+	<bean id="itemReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="sql" value="select employeeId from employee"></property>
+		<property name="rowMapper" ref="rowMapper"></property>
+	</bean>
+	<bean id="rowMapper" class="io.pivotal.gemfire.integration.spring.batch.KeyRowMapper">
+	</bean>
+  <bean id="empGemFireDAO" class="io.pivotal.gemfire.integration.emp.repositories.EmployeeGemFireDAO">
+		<property name="region" ref="employees"></property>
+	</bean>
+	<bean id="itemProcessor" class="org.springframework.batch.item.adapter.ItemProcessorAdapter">
+		<property name="targetObject" ref="employeeRepository"></property>
+		<property name="targetMethod" value="findOne"></property>
+	</bean>	
+	<bean id="itemWriter" class="org.springframework.batch.item.adapter.ItemWriterAdapter">
+	    <property name="targetObject" ref="empGemFireDAO" />
+	    <property name="targetMethod" value="saveEmployee" />
+	</bean>
+	<bean id="startJob" class="io.pivotal.gemfire.integration.spring.batch.JobLaucherCmd">
+		<property name="jobLauncher" ref="jobLauncher"></property>
+	</bean>
+	<!-- =================================== -->
+	<!--   Integration Configuration -->
+	<bean id="jettyHandlerCmd" class="io.pivotal.gemfire.integration.spring.cmd.JettyHandlerWebCommandAdapter"/>
+	<bean id="empJpa2Gf" class="io.pivotal.gemfire.integration.spring.cmd.SaveFromRdms2GemCmd">
+		<property name="crudRepository" ref="employeeRepository"></property>
+		<property name="gemfireTemplate" ref="employerGemFireTemplate"></property>
+		<property name="inFlightMap" ref="employer_inflight"></property>
+		<property name="keyName"><value>key</value></property>
+		<property name="responseText"><value>Updated</value></property>
+	</bean>
+	<!-- int-http:inbound-channel-adapter id="httpChannelAdapter" channel="httpChannel" 
+		supported-methods="PUT, DELETE"/ -->
+	<int:channel id="httpChannel"></int:channel>
+	<int:channel id="oracleChannel"></int:channel>
+	<int:channel id="httpEmployerChannel"></int:channel>
+	<int:channel id="gemFireEmployerChannel"></int:channel>
+	<!-- -int:inbound-channel-adapter id="startEmployer" channel="httpEmployerChannel" 
+		expression="employerRepository.findOne(payload)"/ -->
+
+	<int:object-to-string-transformer
+		input-channel="httpEmployerChannel" output-channel="httpChannel"></int:object-to-string-transformer>
+	<!-- ref="employerRepository" method="findOne" -->
+
+	<int-gfe:outbound-channel-adapter id="cacheChannel"
+		region="employer">
+		<int-gfe:cache-entries>
+			<entry key="payload.toUpperCase()" value="payload.toLowerCase()" />
+			<entry key="'foo'" value="'bar'" />
+		</int-gfe:cache-entries>
+	</int-gfe:outbound-channel-adapter>
+
+	<!-- jdbc:outbound-gateway request-channel="httpChannel" reply-channel="oracleChannel" 
+		query="select employeeid from employee" data-source="dataSource" id="selectEmployerId"> 
+		</jdbc:outbound-gateway -->
+
+	<!-- jdbc:inbound-channel-adapter data-source="dataSource" query="select 
+		employeeid from employee" channel="oracleChannel"> <jdbc:query></jdbc:query> 
+		</jdbc:inbound-channel-adapter -->
+</beans>

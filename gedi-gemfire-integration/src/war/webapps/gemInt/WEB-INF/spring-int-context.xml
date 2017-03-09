@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:int="http://www.springframework.org/schema/integration"
+  xmlns:jdbc="http://www.springframework.org/schema/integration/jdbc"
+  xmlns:gemfire="http://www.springframework.org/schema/integration/gemfire"
+  xmlns:int-http="http://www.springframework.org/schema/integration/http"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/tx 
+    http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+    http://www.springframework.org/schema/integration
+    http://www.springframework.org/schema/integration/spring-integration.xsd 
+    http://www.springframework.org/schema/integration/jdbc
+    http://www.springframework.org/schema/integration/jdbc/spring-integration-jdbc.xsd
+    http://www.springframework.org/schema/integration/gemfire
+    http://www.springframework.org/schema/integration/gemfire/spring-integration-gemfire.xsd
+    http://www.springframework.org/schema/integration/http
+    http://www.springframework.org/schema/integration/http/spring-integration-http.xsd">
+
+  <context:property-placeholder location="classpath:META-INF/jdbc.properties"/>
+  
+ <context:component-scan base-package="io.pivotal.gemfire.integration.emp"></context:component-scan>
+
+  <context:annotation-config/>   
+
+  <jpa:repositories base-package="io.pivotal.gemfire.integration.emp.repositories" />
+  
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+      <property name="dataSource" ref="dataSource" />
+      <property name="packagesToScan" value="io.pivotal.gemfire.integration.emp" />
+      
+          <property name="mappingResources">
+        	<array>
+        		<value>META-INF/orm.xml</value>
+        	</array>
+        	</property>
+        	
+      <property name="jpaVendorAdapter">
+         <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+      </property>
+      <property name="jpaProperties">
+         <props>
+         	 <prop key="hibernate.show_sql">true</prop>
+             <prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+         </props>
+      </property>
+   </bean>
+     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+   <!-- =================================== -->
+ 	<bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource" destroy-method="close">
+        <property name="URL" value="${jdbc.url}" />
+        <property name="user" value="${jdbc.username}"/> 
+        <property name="password" value="${jdbc.password}"/> 
+        <property name="connectionCachingEnabled" value="true"/> 
+    </bean>
+    <tx:annotation-driven />
+     
+	 <bean id="hibernateJpaAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+	    <property name="showSql" value="true" />
+	</bean>
+	
+		
+	<int-http:inbound-channel-adapter id="httpChannelAdapter" channel="httpChannel"
+    supported-methods="PUT, DELETE,POST,GET"/>
+    
+    <!--  bean id="httpInbound"  
+    class="org.springframework.integration.http.inbound.HttpRequestHandlingMessagingGateway">
+  	<property name="requestChannel" ref="httpRequestChannel" />
+  	<property name="replyChannel" ref="httpReplyChannel" />
+	</bean-->
+	<bean id="debug" class="io.pivotal.gemfire.integration.spring.DebugService">
+	</bean>
+
+	<int:inbound-channel-adapter ref=""></int:inbound-channel-adapter>
+	<int-http:inbound-gateway request-channel="httpChannel"
+                          path="/receiveGateway"
+                          supported-methods="GET" reply-channel="oracleChannel"/>
+    
+    <int:channel id="httpChannel"></int:channel>
+	<int:channel id="oracleChannel"></int:channel>
+	
+	<int:chain input-channel="oracleChannel">
+		<int:service-activator ref="debug" method="debug"></int:service-activator>
+		<int:header-filter header-names="content-type" />
+		<int:service-activator expression="System.out.println(payload)"/>
+	</int:chain>
+	
+	<!-- jdbc:outbound-gateway request-channel="httpChannel" 
+	reply-channel="oracleChannel" query="select employeeid from employee"> </jdbc:outbound-gateway>
+	
+	<jdbc:inbound-channel-adapter data-source="dataSource" 
+		query="select employeeid from employee" channel="oracleChannel">
+	</jdbc:inbound-channel-adapter>
+	<int:inbound-channel-adapter ref=""></int:inbound-channel-adapter>
+	<int:service-activator></int:service-activator>
+	<int:service-activator input-channel="oracleChannel" ></int:service-activator-->
+		
+</beans>
