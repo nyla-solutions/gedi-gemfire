@@ -3,7 +3,6 @@ package gedi.solutions.geode.data;
 public enum ExportFileType {
     gfd("gfd"),
 	json("json")
-	//,ADP_FORMAT ("adp")
 	;
 	
 	private final String s;

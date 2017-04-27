@@ -1,11 +1,13 @@
 package solutions.gedi.geode.operations.functions;
 
 import javax.annotation.Resource;
+
+import org.apache.geode.cache.Region;
 import org.junit.Before;
 import org.junit.Test;
 
 import solutions.gedi.demo.ComplexObject;
-import com.gemstone.gemfire.cache.Region;
+
 
 public class ImportJsonFunctionTest
 {

@@ -1,4 +1,4 @@
-package gedi.solutions.geode.data.catalog;
+package gedi.solutions.geode.commas.data.catalog;
 
 import java.io.Serializable;
 
@@ -52,10 +52,10 @@ implements Serializable
     * 
     * @see java.lang.Object#clone()
     */
-   public Object clone() throws CloneNotSupportedException
-   {
-      return super.clone();
-   }//----------------------------------------
+//   public Object clone() throws CloneNotSupportedException
+//   {
+//      return super.clone();
+//   }//----------------------------------------
    /**
     * @param aOther the other property to compare
     * @see java.lang.Comparable#compareTo(java.lang.Object)

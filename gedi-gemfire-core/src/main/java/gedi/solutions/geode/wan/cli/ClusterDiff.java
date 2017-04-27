@@ -8,12 +8,12 @@ import java.util.HashMap;
 
 import javax.management.MalformedObjectNameException;
 
-import com.gemstone.gemfire.cache.client.ClientCache;
-import com.gemstone.gemfire.cache.execute.Execution;
-import com.gemstone.gemfire.cache.execute.FunctionService;
-import com.gemstone.gemfire.management.DistributedRegionMXBean;
-import com.gemstone.gemfire.management.GatewayReceiverMXBean;
-import com.gemstone.gemfire.management.GatewaySenderMXBean;
+import org.apache.geode.cache.client.ClientCache;
+import org.apache.geode.cache.execute.Execution;
+import org.apache.geode.cache.execute.FunctionService;
+import org.apache.geode.management.DistributedRegionMXBean;
+import org.apache.geode.management.GatewayReceiverMXBean;
+import org.apache.geode.management.GatewaySenderMXBean;
 
 import gedi.solutions.geode.client.GemFireJmxClient;
 import gedi.solutions.geode.io.GemFireIO;

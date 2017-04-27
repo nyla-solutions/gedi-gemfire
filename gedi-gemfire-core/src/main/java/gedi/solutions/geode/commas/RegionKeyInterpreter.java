@@ -1,4 +1,4 @@
-package gedi.solutions.geode.bridge;
+package gedi.solutions.geode.commas;
 
 import java.util.Set;
 

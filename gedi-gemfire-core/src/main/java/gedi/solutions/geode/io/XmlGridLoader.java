@@ -1,13 +1,11 @@
 package gedi.solutions.geode.io;
 
-
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import com.gemstone.gemfire.cache.Region;
-import com.gemstone.gemfire.cache.RegionEvent;
+import org.apache.geode.cache.Region;
+import org.apache.geode.cache.RegionEvent;
 
 import nyla.solutions.commas.Command;
 import nyla.solutions.core.exception.RequiredException;

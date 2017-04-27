@@ -13,7 +13,7 @@ import javax.management.Query;
 import javax.management.QueryExp;
 import javax.management.ValueExp;
 
-import com.gemstone.gemfire.management.MemberMXBean;
+import org.apache.geode.management.MemberMXBean;
 
 import gedi.solutions.geode.client.GemFireJmxClient;
 import gedi.solutions.geode.client.SingletonGemFireJmx;
@@ -128,7 +128,7 @@ public class GemFireMgmt
 			
 			JMX jmx = SingletonGemFireJmx.getJmx();
 
-			MemberMXBean bean = jmx.newBean(com.gemstone.gemfire.management.MemberMXBean.class,serverName);
+			MemberMXBean bean = jmx.newBean(MemberMXBean.class,serverName);
 			
 			bean.shutDownMember();
 			

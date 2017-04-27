@@ -1,4 +1,4 @@
-package gedi.solutions.geode.data.catalog;
+package gedi.solutions.geode.commas.data.catalog;
 
 
 import java.io.Serializable;

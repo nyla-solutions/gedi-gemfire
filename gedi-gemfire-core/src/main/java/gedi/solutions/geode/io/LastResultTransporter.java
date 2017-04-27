@@ -2,7 +2,8 @@ package gedi.solutions.geode.io;
 
 import java.io.Serializable;
 
-import com.gemstone.gemfire.cache.execute.ResultSender;
+import org.apache.geode.cache.execute.ResultSender;
+
 
 /**
  * Implementation of the Result Transporter to send the last results
@@ -15,7 +16,7 @@ public class LastResultTransporter implements ResultTransporter
 	 * @param resultSender Gemfire result sender
 	 * @param data the data used to send
 	 */
-	//@Override
+	@Override
 	public void send(ResultSender<Object> resultSender, Object data)
 	{
 		

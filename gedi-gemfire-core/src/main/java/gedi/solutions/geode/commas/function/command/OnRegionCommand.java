@@ -1,13 +1,13 @@
-package gedi.solutions.geode.bridge.function.command;
+package gedi.solutions.geode.commas.function.command;
 
 import java.io.Serializable;
 import java.util.Set;
 
-import com.gemstone.gemfire.cache.Region;
-import com.gemstone.gemfire.cache.execute.Execution;
-import com.gemstone.gemfire.cache.execute.FunctionService;
+import org.apache.geode.cache.Region;
+import org.apache.geode.cache.execute.Execution;
+import org.apache.geode.cache.execute.FunctionService;
 
-import gedi.solutions.geode.bridge.RegionKeyInterpreter;
+import gedi.solutions.geode.commas.RegionKeyInterpreter;
 
 /**
  * This command calls another bridge based on region function.

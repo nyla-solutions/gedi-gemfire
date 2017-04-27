@@ -1,7 +1,7 @@
 /**
  * 
  */
-package gedi.solutions.geode.bridge.function.command;
+package gedi.solutions.geode.commas.function.command;
 
 import nyla.solutions.commas.Command;
 import nyla.solutions.core.data.Envelope;

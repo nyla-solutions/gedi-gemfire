@@ -2,8 +2,8 @@ package gedi.solutions.geode.client;
 
 import java.io.File;
 
-import com.gemstone.gemfire.cache.client.ClientCache;
-import com.gemstone.gemfire.cache.client.ClientCacheFactory;
+import org.apache.geode.cache.client.ClientCache;
+import org.apache.geode.cache.client.ClientCacheFactory;
 
 import nyla.solutions.core.io.IO;
 import nyla.solutions.core.patterns.jmx.JMX;

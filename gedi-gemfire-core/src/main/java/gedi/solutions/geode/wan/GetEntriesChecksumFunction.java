@@ -9,14 +9,14 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import com.gemstone.gemfire.cache.CacheFactory;
-import com.gemstone.gemfire.cache.Declarable;
-import com.gemstone.gemfire.cache.Region;
-import com.gemstone.gemfire.cache.execute.Function;
-import com.gemstone.gemfire.cache.execute.FunctionContext;
-import com.gemstone.gemfire.cache.execute.FunctionException;
-import com.gemstone.gemfire.cache.partition.PartitionRegionHelper;
-import com.gemstone.gemfire.pdx.PdxInstance;
+import org.apache.geode.cache.CacheFactory;
+import org.apache.geode.cache.Declarable;
+import org.apache.geode.cache.Region;
+import org.apache.geode.cache.execute.Function;
+import org.apache.geode.cache.execute.FunctionContext;
+import org.apache.geode.cache.execute.FunctionException;
+import org.apache.geode.cache.partition.PartitionRegionHelper;
+import org.apache.geode.pdx.PdxInstance;
 
 import nyla.solutions.core.security.MD;
 import nyla.solutions.core.util.Debugger;

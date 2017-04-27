@@ -3,13 +3,13 @@ package gedi.solutions.geode.io;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.gemstone.gemfire.cache.DataPolicy;
-import com.gemstone.gemfire.cache.Region;
-import com.gemstone.gemfire.cache.execute.Execution;
-import com.gemstone.gemfire.cache.execute.Function;
-import com.gemstone.gemfire.cache.execute.FunctionException;
-import com.gemstone.gemfire.cache.execute.ResultCollector;
-import com.gemstone.gemfire.cache.execute.ResultSender;
+import org.apache.geode.cache.DataPolicy;
+import org.apache.geode.cache.Region;
+import org.apache.geode.cache.execute.Execution;
+import org.apache.geode.cache.execute.Function;
+import org.apache.geode.cache.execute.FunctionException;
+import org.apache.geode.cache.execute.ResultCollector;
+import org.apache.geode.cache.execute.ResultSender;
 
 import nyla.solutions.core.exception.DataException;
 

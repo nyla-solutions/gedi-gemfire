@@ -1,13 +1,14 @@
 package gedi.solutions.geode.client;
 
 
+import org.apache.geode.cache.Region;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
-
-import com.gemstone.gemfire.cache.Region;
 
 import nyla.solutions.core.patterns.jmx.JMX;
 
+@Ignore
 public class GemFireJmxClientTest
 {
 

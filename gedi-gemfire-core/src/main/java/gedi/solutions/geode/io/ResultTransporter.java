@@ -1,7 +1,6 @@
 package gedi.solutions.geode.io;
 
-
-import com.gemstone.gemfire.cache.execute.ResultSender;
+import org.apache.geode.cache.execute.ResultSender;
 
 /**
  * Interface to send function/execution results

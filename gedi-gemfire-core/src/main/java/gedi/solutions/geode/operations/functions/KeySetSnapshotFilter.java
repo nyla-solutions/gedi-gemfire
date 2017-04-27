@@ -2,7 +2,8 @@ package gedi.solutions.geode.operations.functions;
 
 import java.util.Map.Entry;
 import java.util.Set;
-import com.gemstone.gemfire.cache.snapshot.SnapshotFilter;
+
+import org.apache.geode.cache.snapshot.SnapshotFilter;
 
 /**
  * This object will filter out keys for a snapshot

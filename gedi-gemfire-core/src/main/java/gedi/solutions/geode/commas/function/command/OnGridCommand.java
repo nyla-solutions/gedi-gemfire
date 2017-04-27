@@ -1,4 +1,4 @@
-package gedi.solutions.geode.bridge.function.command;
+package gedi.solutions.geode.commas.function.command;
 
 
 import java.io.Serializable;
@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.gemstone.gemfire.cache.Cache;
-import com.gemstone.gemfire.cache.CacheFactory;
-import com.gemstone.gemfire.cache.execute.Execution;
-import com.gemstone.gemfire.cache.execute.FunctionContext;
-import com.gemstone.gemfire.cache.execute.ResultCollector;
+import org.apache.geode.cache.Cache;
+import org.apache.geode.cache.CacheFactory;
+import org.apache.geode.cache.execute.Execution;
+import org.apache.geode.cache.execute.FunctionContext;
+import org.apache.geode.cache.execute.ResultCollector;
 
 import nyla.solutions.commas.Command;
 import nyla.solutions.core.data.Envelope;

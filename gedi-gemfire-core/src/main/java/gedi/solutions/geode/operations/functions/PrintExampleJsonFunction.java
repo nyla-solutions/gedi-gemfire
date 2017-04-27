@@ -1,11 +1,12 @@
 package gedi.solutions.geode.operations.functions;
 
+import org.apache.geode.cache.CacheFactory;
+import org.apache.geode.cache.execute.Function;
+import org.apache.geode.cache.execute.FunctionContext;
+import org.apache.geode.cache.execute.FunctionException;
+import org.apache.geode.cache.execute.ResultSender;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gemstone.gemfire.cache.CacheFactory;
-import com.gemstone.gemfire.cache.execute.Function;
-import com.gemstone.gemfire.cache.execute.FunctionContext;
-import com.gemstone.gemfire.cache.execute.FunctionException;
-import com.gemstone.gemfire.cache.execute.ResultSender;
 
 
 public class PrintExampleJsonFunction implements Function

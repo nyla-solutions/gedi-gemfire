@@ -16,20 +16,20 @@ import javax.management.Query;
 import javax.management.QueryExp;
 import javax.management.openmbean.CompositeData;
 
-import com.gemstone.gemfire.cache.CacheClosedException;
-import com.gemstone.gemfire.cache.Region;
-import com.gemstone.gemfire.cache.client.ClientCache;
-import com.gemstone.gemfire.cache.client.ClientCacheFactory;
-import com.gemstone.gemfire.cache.client.ClientRegionShortcut;
-import com.gemstone.gemfire.cache.client.Pool;
-import com.gemstone.gemfire.cache.client.PoolFactory;
-import com.gemstone.gemfire.cache.client.PoolManager;
-import com.gemstone.gemfire.cache.execute.FunctionService;
-import com.gemstone.gemfire.management.DistributedRegionMXBean;
-import com.gemstone.gemfire.management.DistributedSystemMXBean;
-import com.gemstone.gemfire.management.GatewayReceiverMXBean;
-import com.gemstone.gemfire.management.GatewaySenderMXBean;
-import com.gemstone.gemfire.management.MemberMXBean;
+import org.apache.geode.cache.CacheClosedException;
+import org.apache.geode.cache.Region;
+import org.apache.geode.cache.client.ClientCache;
+import org.apache.geode.cache.client.ClientCacheFactory;
+import org.apache.geode.cache.client.ClientRegionShortcut;
+import org.apache.geode.cache.client.Pool;
+import org.apache.geode.cache.client.PoolFactory;
+import org.apache.geode.cache.client.PoolManager;
+import org.apache.geode.cache.execute.FunctionService;
+import org.apache.geode.management.DistributedRegionMXBean;
+import org.apache.geode.management.DistributedSystemMXBean;
+import org.apache.geode.management.GatewayReceiverMXBean;
+import org.apache.geode.management.GatewaySenderMXBean;
+import org.apache.geode.management.MemberMXBean;
 
 import gedi.solutions.geode.io.GemFireIO;
 import gedi.solutions.geode.operations.functions.ClearRegionFunction;
@@ -608,7 +608,7 @@ public class GemFireJmxClient
 			
 			ObjectName serverName = new ObjectName(pattern);
 			
-			return jmx.newBean(com.gemstone.gemfire.management.MemberMXBean.class,serverName);
+			return jmx.newBean(MemberMXBean.class,serverName);
 			
 			
 		}

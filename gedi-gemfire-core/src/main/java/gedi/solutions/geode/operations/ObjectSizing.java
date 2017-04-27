@@ -4,17 +4,17 @@ package gedi.solutions.geode.operations;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.gemstone.gemfire.LogWriter;
-import com.gemstone.gemfire.cache.Region;
-import com.gemstone.gemfire.cache.partition.PartitionRegionHelper;
-import com.gemstone.gemfire.internal.cache.CachedDeserializable;
-import com.gemstone.gemfire.internal.cache.EntrySnapshot;
-import com.gemstone.gemfire.internal.cache.LocalRegion;
-import com.gemstone.gemfire.internal.cache.PartitionedRegion;
-import com.gemstone.gemfire.internal.cache.RegionEntry;
-import com.gemstone.gemfire.internal.size.ObjectGraphSizer;
-import com.gemstone.gemfire.internal.size.ReflectionObjectSizer;
-import com.gemstone.gemfire.pdx.PdxInstance;
+import org.apache.geode.LogWriter;
+import org.apache.geode.cache.Region;
+import org.apache.geode.cache.partition.PartitionRegionHelper;
+import org.apache.geode.internal.cache.CachedDeserializable;
+import org.apache.geode.internal.cache.EntrySnapshot;
+import org.apache.geode.internal.cache.LocalRegion;
+import org.apache.geode.internal.cache.PartitionedRegion;
+import org.apache.geode.internal.cache.RegionEntry;
+import org.apache.geode.internal.size.ObjectGraphSizer;
+import org.apache.geode.internal.size.ReflectionObjectSizer;
+import org.apache.geode.pdx.PdxInstance;
 
 import nyla.solutions.core.patterns.reflection.ObjectClassSizer;
 public class ObjectSizing

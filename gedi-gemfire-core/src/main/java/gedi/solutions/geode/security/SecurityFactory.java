@@ -1,7 +1,7 @@
 package gedi.solutions.geode.security;
 
-import com.gemstone.gemfire.security.AuthInitialize;
-import com.gemstone.gemfire.security.Authenticator;
+import org.apache.geode.security.AuthInitialize;
+import org.apache.geode.security.Authenticator;
 
 /**
  * SecurityFactory is representable for the create authorization/authentication objects

@@ -1,17 +1,19 @@
-package gedi.solutions.geode.bridge.function.command;
+package gedi.solutions.geode.commas.function.command;
+
 import java.io.Serializable;
 
-import com.gemstone.gemfire.cache.client.Pool;
-import com.gemstone.gemfire.cache.client.PoolManager;
-import com.gemstone.gemfire.cache.execute.Execution;
-import com.gemstone.gemfire.cache.execute.FunctionService;
+import org.apache.geode.cache.client.Pool;
+import org.apache.geode.cache.client.PoolManager;
+import org.apache.geode.cache.execute.Execution;
+import org.apache.geode.cache.execute.FunctionService;
+
 
 /**
- *  This command calls another bridge based on server function.
+ *  This command calls another bridge based on servers function.
  * @author Gregory Green
  *
  */
-public class OnServerCommand extends OnGridCommand
+public class OnServersCommand extends OnGridCommand
 {  
 	/**
 	 * Create execution object
@@ -22,7 +24,7 @@ public class OnServerCommand extends OnGridCommand
 	{
     	Pool pool = PoolManager.find(poolName);
         
-        return FunctionService.onServer(pool);
+        return FunctionService.onServers(pool);
 	}// -----------------------------------------------
 	/**
 	 * @return the poolName

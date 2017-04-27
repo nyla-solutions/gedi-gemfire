@@ -24,14 +24,13 @@ import java.util.Properties;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
-import com.gemstone.gemfire.LogWriter;
-import com.gemstone.gemfire.cache.Cache;
-import com.gemstone.gemfire.cache.CacheFactory;
-import com.gemstone.gemfire.cache.Declarable;
-import com.gemstone.gemfire.cache.execute.Function;
-import com.gemstone.gemfire.cache.execute.FunctionContext;
-import com.gemstone.gemfire.distributed.DistributedSystem;
-
+import org.apache.geode.LogWriter;
+import org.apache.geode.cache.Cache;
+import org.apache.geode.cache.CacheFactory;
+import org.apache.geode.cache.Declarable;
+import org.apache.geode.cache.execute.Function;
+import org.apache.geode.cache.execute.FunctionContext;
+import org.apache.geode.distributed.DistributedSystem;
 
 
 /**
@@ -92,7 +91,8 @@ public class SystemShutDownFunction implements Function, Declarable
 					
 					logWriter = distributedSystem.getLogWriter();
 					
-					logWriter.severe("FUNCTION:SystemDownFunction invoking shutDownAllMembers on member:"+distributeMemberName);
+					if(logWriter != null)
+						logWriter.severe("FUNCTION:SystemDownFunction invoking shutDownAllMembers on member:"+distributeMemberName);
 				
 					try
 					{
